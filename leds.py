@@ -20,7 +20,7 @@ def main():
 
     # Prepare a few individual pixels
     strip.set_pixel_rgb(1, 0xFF0000)  # Red
-    strip.set_pixel_rgb(2, 0xFFFFFF)  # White
+    strip.set_pixel_rgb(2, 0x0000FF)  # Blue
     strip.set_pixel_rgb(3, 0x00FF00)  # Green
 
     # Copy the buffer to the Strip (i.e. show the prepared pixels)
