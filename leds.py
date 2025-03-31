@@ -18,6 +18,19 @@ def light(strip,angle):
     strip.set_pixel_rgb(led_nr, 0x00FF00)  # Green
     strip.show()
 
+
+def light_four(strip, ids:list[int], angles:list[float]):
+    colors = [0xFF0000, 0x0000FF, 0x00FF00, 0xFFFFFF]
+    strip.clear_strip()
+    led_nr=[]
+    for i in range(4):
+        if ids[i]==0:
+            continue
+        led_nr=round(angles[i]/30)
+        strip.set_pixel_rgb(led_nr,colors[i])
+    strip.show()
+
+
 def stop_leds(strip,power_pin):
     strip.clear_strip()
     strip.cleanup()
