@@ -44,7 +44,7 @@ def main():
 
         counter+=1
 
-        if counter<20:
+        if counter<10:
             continue
         ids = []
         angles=[]
