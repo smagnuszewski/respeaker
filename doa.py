@@ -18,7 +18,7 @@ def get_frame(process: subprocess) -> str:
         
 def main():
     odas_process = subprocess.Popen(
-        ["/home/rpi/odas/build/bin/odaslive", "-c", "./custom.cfg"],
+        ["odaslive", "-c", "./custom.cfg"],
         stdout=subprocess.PIPE, 
         stderr=subprocess.STDOUT,
         text=True)
