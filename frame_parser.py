@@ -28,6 +28,6 @@ class Signal(object):
         self.activity = self.activity/denominator
     
     def getAngle(self):
-        self.angle = math.degrees(math.atan2(self.y,self.x))+180
+        self.angle = math.degrees(math.atan2(self.y,self.x))+120
 
 
