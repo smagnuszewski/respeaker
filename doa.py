@@ -3,7 +3,7 @@ import json
 from leds import start_leds, stop_leds, light_four
 import time
 import sys
-from signal import Signal
+from frame_parser import Signal
 
 led=start_leds(5)
 
