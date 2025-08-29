@@ -1,6 +1,6 @@
 import subprocess
 import sys
-import pathlib
+from pathlib import Path
 import json
 from leds import start_leds, stop_leds, light_four
 import time
@@ -19,8 +19,8 @@ def get_frame(process: subprocess) -> str:
     return json.loads(frame)
         
 def main():
-    odas_path = sys.argv[0]
-    config_path = sys.argv[1]
+    odas_path = Path(sys.argv[1]).resolve().as_posix()
+    config_path = Path(sys.argv[2]).resolve().as_posix()
     print(f"odas_path  is {odas_path} and config is {config_path}")
     odas_process = subprocess.Popen(
         [odas_path, "-c", config_path],
