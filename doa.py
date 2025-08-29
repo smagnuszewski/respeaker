@@ -21,14 +21,11 @@ def get_frame(process: subprocess) -> str:
 def main():
     odas_path = Path(sys.argv[1]).resolve().as_posix()
     config_path = Path(sys.argv[2]).resolve().as_posix()
-    print(f"odas_path  is {odas_path} and config is {config_path}")
     odas_process = subprocess.Popen(
         [odas_path, "-c", config_path],
         stdout=subprocess.PIPE, 
         stderr=subprocess.STDOUT,
         text=True)
-    
-
     counter = 0
     signals = []
 
@@ -36,13 +33,12 @@ def main():
         signals.append(Signal())
     
     while True:
-
         # Unwrap stdout
         line = odas_process.stdout.readline().strip()
         if line != '{':
             continue
         frame = get_frame(odas_process)
-
+        print(frame)
         # Dividie each frame to signals
         for i in range(4):
             signals[i].readFrame(frame['src'][i])
@@ -58,7 +54,7 @@ def main():
             s.getAngle()
             ids.append(s.id)
             angles.append(s.angle)
-            print(f"id={s.id}, x={s.x}, y={s.y}, activity={s.activity}, angle={s.angle}")
+            #print(f"id={s.id}, x={s.x}, y={s.y}, activity={s.activity}, angle={s.angle}")
             s.clear()
         # light(strip=led,angle=s.angle)
         
@@ -66,7 +62,7 @@ def main():
         ids.clear()
         angles.clear()
         counter = 0
-        print("---")
+        #print("---")
 
         
 if __name__ == '__main__':
