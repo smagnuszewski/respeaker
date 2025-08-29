@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import signal
 from pathlib import Path
 import json
 from leds import start_leds, stop_leds, light_four
@@ -18,14 +19,8 @@ def get_frame(process: subprocess) -> str:
             break
     return json.loads(frame)
         
-def main():
-    odas_path = Path(sys.argv[1]).resolve().as_posix()
-    config_path = Path(sys.argv[2]).resolve().as_posix()
-    odas_process = subprocess.Popen(
-        [odas_path, "-c", config_path],
-        stdout=subprocess.PIPE, 
-        stderr=subprocess.STDOUT,
-        text=True)
+def main(odas_process: subprocess):
+    
     counter = 0
     signals = []
 
@@ -38,7 +33,6 @@ def main():
         if line != '{':
             continue
         frame = get_frame(odas_process)
-        print(frame)
         # Dividie each frame to signals
         for i in range(4):
             signals[i].readFrame(frame['src'][i])
@@ -54,22 +48,33 @@ def main():
             s.getAngle()
             ids.append(s.id)
             angles.append(s.angle)
-            #print(f"id={s.id}, x={s.x}, y={s.y}, activity={s.activity}, angle={s.angle}")
+            print(f"id={s.id}, x={s.x}, y={s.y}, activity={s.activity}, angle={s.angle}")
             s.clear()
-        # light(strip=led,angle=s.angle)
         
         light_four(led,ids,angles)
         ids.clear()
         angles.clear()
         counter = 0
-        #print("---")
+        print("---")
 
         
 if __name__ == '__main__':
     try:
-        main()
+        odas_path = Path(sys.argv[1]).resolve().as_posix()
+        config_path = Path(sys.argv[2]).resolve().as_posix()
+        odas_process = subprocess.Popen([odas_path, "-c", config_path],stdout=subprocess.PIPE, stderr=subprocess.STDOUT,text=True)
+        main(odas_process)
     except KeyboardInterrupt:
+        print ('Interrupted, turning off audio device...')
         stop_leds(led,5)
-        print ('interrupted, turning off')
-        time.sleep(1)
+        odas_process.send_signal(signal.SIGINT)  # send Ctrl+C to odas
+        odas_process.wait()
+    finally:
+        odas_process.terminate()
+        try:
+            odas_process.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            odas_process.kill()
+            print("Bad termination")
+
         sys.exit(0)
