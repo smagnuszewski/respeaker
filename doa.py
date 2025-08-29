@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import json
 from leds import start_leds, stop_leds, light_four
 import time
@@ -17,8 +18,10 @@ def get_frame(process: subprocess) -> str:
     return json.loads(frame)
         
 def main():
+    odas_path = sys.argv[0]
+    config_path = sys.argv[1]
     odas_process = subprocess.Popen(
-        ["odaslive", "-c", "./custom.cfg"],
+        [odas_path, "-c", config_path],
         stdout=subprocess.PIPE, 
         stderr=subprocess.STDOUT,
         text=True)
